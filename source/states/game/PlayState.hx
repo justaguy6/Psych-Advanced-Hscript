@@ -82,7 +82,7 @@ import shaders.FlxRunTimeShader;
 import sys.FileSystem;
 import sys.io.File;
 #end
-#if VIDEOS_ALLOWED
+#if VIDEOS_ALLOWED // em breve
 import vlc.MP4Handler;
 #end
 
@@ -90,6 +90,7 @@ class PlayState extends MusicBeatState
 {
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
+	public static final ex:Array<String> = ["hx", "hscript", "hsc", "hxs"];
 
 	public static var ratingStuff:Array<Dynamic> = [
 		['You Suck!', 0.2], // From 0% to 19%
@@ -462,7 +463,7 @@ class PlayState extends MusicBeatState
 		boyfriendGroup.add(boyfriend);
 
 		initScripts();
-		initSongEvents();
+//		initSongEvents();
 
 		scripts.executeAllFunc("create");
 
@@ -677,6 +678,11 @@ class PlayState extends MusicBeatState
 		timeBarBG.cameras = [camHUD];
 		timeTxt.cameras = [camHUD];
 
+		#if android
+		addAndroidControls();
+		androidControls.visible = true;
+		#end
+
 		startingSong = true;
 
 		var daSong:String = Paths.formatToSongPath(curSong);
@@ -697,7 +703,7 @@ class PlayState extends MusicBeatState
 
 		// PRECACHING MISS SOUNDS BECAUSE I THINK THEY CAN LAG PEOPLE AND FUCK THEM UP IDK HOW HAXE WORKS
 		if (ClientPrefs.hitsoundVolume > 0)
-			precacheList.set('hitsound', 'sound');
+		precacheList.set('hitsound', 'sound');
 		precacheList.set('missnote1', 'sound');
 		precacheList.set('missnote2', 'sound');
 		precacheList.set('missnote3', 'sound');
@@ -1249,7 +1255,7 @@ class PlayState extends MusicBeatState
 
 		var songName:String = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.json(songName + '/events');
-		if (FileSystem.exists(file))
+		if (Assets.exists(file))
 		{
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
 			for (event in eventsData) // Event Notes
@@ -1662,7 +1668,7 @@ class PlayState extends MusicBeatState
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
 		}
 
-		if (controls.PAUSE && startedCountdown && canPause)
+		if (controls.PAUSE #if android || FlxG.android.justReleased.BACK #end && startedCountdown && canPause)
 		{
 			if (!ScriptUtil.hasPause(scripts.executeAllFunc("pause")))
 				openPauseMenu();
@@ -3471,41 +3477,37 @@ class PlayState extends MusicBeatState
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
 	}
-
 	function initScripts()
 	{
-		if (scripts == null)
-			return;
 
-		var scriptData:Map<String, String> = [];
+	if (scripts == null)
+		return;
 
-		// SONG && GLOBAL SCRIPTS
-		var files:Array<String> = SONG.song == null ? [] : ScriptUtil.findScriptsInDir(Paths.getPreloadPath("data/" + Paths.formatToSongPath(SONG.song)));
+	var files:Array<String> = SONG.song == null ? [] : ScriptUtil.findScriptsInDir(SUtil.getStorageDirectory() + Paths.getPreloadPath("data/" + Paths.formatToSongPath(SONG.song)));
+	var scriptData:Map<String, String> = [];
 
-		if (FileSystem.exists("assets/scripts/global"))
-		{
-			for (_ in ScriptUtil.findScriptsInDir("assets/scripts/global"))
-				files.push(_);
-		}
-
-		for (file in files)
-		{
-			var hx:Null<String> = null;
+	if (FileSystem.exists("assets/scripts/global"))
+        {
+            for (_ in ScriptUtil.findScriptsInDir("assets/scripts/global"))
+                files.push(_);
+        }
+        
+        for (file in files)
+        {
+            var hx:Null<String> = null;
 
 			if (FileSystem.exists(file))
-				hx = File.getContent(file);
-
+                hx = File.getContent(file);
+			
 			if (hx != null)
-			{
-				var scriptName:String = CoolUtil.getFileStringFromPath(file);
-
-				if (!scriptData.exists(scriptName))
 				{
-					scriptData.set(scriptName, hx);
-				}
-			}
-		}
-
+					var scriptName:String = CoolUtil.getFileStringFromPath(file);
+	
+					if (!scriptData.exists(scriptName))
+					{
+						scriptData.set(scriptName, hx);
+					}
+		}		}
 		// STAGE SCRIPTS
 		if (SONG.stage != null)
 		{
@@ -3542,25 +3544,28 @@ class PlayState extends MusicBeatState
 
 	private var eventsPushed:Array<Dynamic> = [];
 
+	#if linux
 	public function initSongEvents()
 	{
-		if (!FileSystem.exists("assets/scripts/events"))
+		var path:String = "assets/scripts/events";
+
+		if (!FileSystem.exists(path))
 			return;
 
 		var jsonFiles:Array<String> = CoolUtil.findFilesInPath("assets/scripts/events", ["json"], true, false);
 
 		var hxFiles:Map<String, String> = [];
 
-		if (FileSystem.exists('assets/scripts/events/${Paths.formatToSongPath(SONG.song)}'))
+		if (FileSystem.exists("assets/scripts/events", '${Paths.formatToSongPath(SONG.song)}'))
 		{
-			for (file in CoolUtil.findFilesInPath('assets/scripts/events/${Paths.formatToSongPath(SONG.song)}', ["json"], true, true))
+			for (file in CoolUtil.findFilesInPath("assets/scripts/events", '${Paths.formatToSongPath(SONG.song)}', ["json"], true, true))
 				jsonFiles.push(file);
 		}
 
 		for (file in jsonFiles)
 		{
 			var json:{val1:String, val2:String} = {val1: null, val2: null};
-			if (FileSystem.exists(file))
+			if (FileSystem.exists.exists(file))
 			{
 				try
 				{
@@ -3598,6 +3603,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+	#end
 
 	function initEventScript(name:String) {}
 
