@@ -52,8 +52,13 @@ class Main extends Sprite
 	{
 		super();
 
-		SUtil.uncaughtErrorHandler();
-
+		#if mobile
+		#if (android && EXTERNAL || MEDIA)
+		SUtil.doPermissionsShit();
+		#end
+		Sys.setCwd(SUtil.getStorageDirectory());
+		#end
+			
 		if (stage != null)
 		{
 			init();
@@ -87,8 +92,6 @@ class Main extends Sprite
 			gameWidth = Math.ceil(stageWidth / zoom);
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
-
-		SUtil.checkFiles();
 
 		addChild(new FlxGame(gameWidth, gameHeight, Init, zoom, framerate, framerate, skipSplash, startFullscreen));
 
