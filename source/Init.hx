@@ -27,7 +27,7 @@ class Init extends FlxState
 	{
 		super.create();
 
-		#if cpp
+		#if windows
 		CPPInterface.darkMode();
 		#end
 
