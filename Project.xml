@@ -116,6 +116,13 @@
 			<!--<android gradle-version="7.4.2" gradle-plugin="7.3.1" />--> <!-- ENABLE THIS IF YOU HAVE ISSUES AT COMPILE -->
 
 			<!--Target SDK-->
+			<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE" />
+			<config:android permission="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+			<!-- Fix Networking -->
+			<config:android permission="android.permission.INTERNET" />
+			<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
+			
 			<android min-sdk-version="16" target-sdk-version="29" max-sdk-version="33" if="${lime &lt; 8.1.0}"/>
                 </config>
 	</section>
