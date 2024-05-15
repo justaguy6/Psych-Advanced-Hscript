@@ -172,12 +172,12 @@ class CoolUtil
 	{
 		var files:Array<String> = [];
 
-		if (FileSystem.exists(path))
+		if (FileSystem.exists(SUtil.getStorageDirectory() + path))
 		{
-			for (file in FileSystem.readDirectory(path))
+			for (file in FileSystem.readDirectory(SUtil.getStorageDirectory() + path))
 			{
 				var path = haxe.io.Path.join([path, file]);
-				if (!FileSystem.isDirectory(path))
+				if (!FileSystem.isDirectory(SUtil.getStorageDirectory() + path))
 				{
 					for (extn in extns)
 					{
