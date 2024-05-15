@@ -228,12 +228,12 @@ class Paths
 			var levelPath:String = '';
 			if (currentLevel != 'shared')
 			{
-				levelPath = getLibraryPathForce(key, currentLevel);
+				levelPath = SUtil.getStorageDirectory() + getLibraryPathForce(key, currentLevel);
 				if (FileSystem.exists(levelPath))
 					return File.getContent(levelPath);
 			}
 
-			levelPath = getLibraryPathForce(key, 'shared');
+			levelPath = SUtil.getStorageDirectory() + getLibraryPathForce(key, 'shared');
 			if (FileSystem.exists(levelPath))
 				return File.getContent(levelPath);
 		}
@@ -243,7 +243,7 @@ class Paths
 
 	inline static public function font(key:String)
 	{
-		return 'assets/fonts/$key';
+		return SUtil.getStorageDirectory() + 'assets/fonts/$key';
 	}
 
 	inline static public function fileExists(key:String, type:AssetType, ?library:String)
@@ -301,11 +301,11 @@ class Paths
 	public static function returnSound(path:String, key:String, ?library:String)
 	{
 		// I hate this so god damn much
-		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
+		var gottenPath:String = SUtil.getStorageDirectory() + getPath('$path/$key.$SOUND_EXT', SOUND, library);
 		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 
 		if (!currentTrackedSounds.exists(gottenPath))
-			currentTrackedSounds.set(gottenPath, Sound.fromFile('./' + gottenPath));
+			currentTrackedSounds.set(gottenPath, Sound.fromFile(gottenPath));
 
 		localTrackedAssets.push(gottenPath);
 		return currentTrackedSounds.get(gottenPath);
