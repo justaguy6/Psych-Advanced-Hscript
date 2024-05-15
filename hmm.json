@@ -51,10 +51,10 @@
 		},
 		
 		{
-		"name":"linc_luajit",
+		"name":"extension-androidtools",
 		"type":"git",
 		"ref":"master",
-		"url":"https://github.com/Sirox228/linc_luajit"
+		"url":"https://github.com/MaysLastPlay77/extension-androidtools"
 		}
 	]
 }
