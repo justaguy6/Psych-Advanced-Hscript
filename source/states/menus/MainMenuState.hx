@@ -122,6 +122,8 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
+                addVirtualPad(UP_DOWN, A_B);
+		
 		super.create();
 	}
 
