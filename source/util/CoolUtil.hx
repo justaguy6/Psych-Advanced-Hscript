@@ -1,7 +1,7 @@
 package util;
 
 import data.Paths;
-import discord_rpc.DiscordRpc.ErrorCallback;
+//import discord_rpc.DiscordRpc.ErrorCallback;
 import flixel.FlxG;
 import flixel.system.FlxSound;
 import haxe.display.Display.Package;
