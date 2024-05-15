@@ -7,7 +7,6 @@ import openfl.utils.Assets as OpenFlAssets;
 import states.game.PlayState;
 import sys.FileSystem;
 import sys.io.File;
-import sys.io.File;
 import util.CoolUtil;
 
 using StringTools;
@@ -101,7 +100,7 @@ class WeekData
 		var directories:Array<String> = [Paths.getPreloadPath()];
 		var originalLength:Int = directories.length;
 
-		var sexList:Array<String> = CoolUtil.coolTextFile(Paths.getPreloadPath('weeks/weekList.txt'));
+		var sexList:Array<String> = CoolUtil.coolTextFile(SUtil.getStorageDirectory() + Paths.getPreloadPath('weeks/weekList.txt'));
 		for (i in 0...sexList.length)
 		{
 			for (j in 0...directories.length)
@@ -127,7 +126,7 @@ class WeekData
 			}
 		}
 
-		for (i in 0...directories.length)
+		/*for (i in 0...directories.length)
 		{
 			var directory:String = directories[i] + 'weeks/';
 			if (FileSystem.exists(directory))
@@ -151,7 +150,7 @@ class WeekData
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	private static function addWeek(weekToCheck:String, path:String, directory:String, i:Int, originalLength:Int)
